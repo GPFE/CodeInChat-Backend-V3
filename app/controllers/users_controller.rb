@@ -9,7 +9,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render json: { user: @user }, status: 201
+      session = @user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip)
+      render json: { user: @user, token: session.token }, status: 201
     else
       render json: { error: "Cannot create the user." }, status: 400
     end

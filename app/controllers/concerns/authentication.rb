@@ -11,6 +11,8 @@ module Authentication
   def resume_session
     token = request.headers['Authorization']&.split(' ')&.last
     Current.session = Session.find_by(token: token)
+    p Current.session
+    Current.session
   end
   def refresh_session
     if Current.session
