@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
   skip_before_action :require_authentication, only: [:create]
+  # skip_after_action :refresh_session, only: [:index, :show]
+  skip_after_action :refresh_session
 
   def index
     render json: { users: User.all }
