@@ -24,6 +24,18 @@ class PrivateChatsController < ApplicationController
         render json: { users: chatters }, status: 200
     end
 
+    def show
+        received_messages = User.find(params[:recipient_id])
+            .sent_messages.where(receivable_type: "User", receivable_id: Current.session[:user_id]).to_a
+        sent_messages = User.find(Current.session[:user_id])
+            .sent_messages.where(receivable_type: "User", receivable_id: params[:recipient_id]).to_a
+
+        messages = received_messages.concat(sent_messages)
+        sorted_messages = messages.sort_by &:created_at
+        
+        render json: { messages: sorted_messages }, status: 200
+    end
+
     private
 
     def reject_invalid_user

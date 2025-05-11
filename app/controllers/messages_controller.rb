@@ -9,7 +9,7 @@ class MessagesController < ApplicationController
         end
 
         if message.save
-            render json: { success: "Message was created successfully" }, status: 201
+            render json: { success: "Message was created successfully", message: message }, status: 201
         else
             reject_invalid_message
         end
