@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
   def create
     if user = User.authenticate_by(email_address: params[:user][:email_address], password: params[:user][:password])
       session = user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip)
-      render json: { token: session.token, user: user }, status: :created
+      render json: { token: session.token, user: user, user_info: UserInfo.find_by(user_id: user.id) }, status: :created
     else
       render json: { error: 'Invalid credentials' }, status: :unauthorized
     end
