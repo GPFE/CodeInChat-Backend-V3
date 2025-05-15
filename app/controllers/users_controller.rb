@@ -4,7 +4,8 @@ class UsersController < ApplicationController
   skip_after_action :refresh_session
 
   def index
-    render json: { users: User.all }
+    user = User.includes(:user_info).all
+    render json: { users: user.as_json(include: :user_info) }
   end
 
   def show
@@ -23,9 +24,24 @@ class UsersController < ApplicationController
     end
   end
 
+  def update
+    user = User.find(Current.session[:user_id])
+
+    if user.update!(user_update_params)
+      session = user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip)
+      render json: { user: user, user_info: user.user_info, token: session.token, success: "Your data were successfully updated." }, status: 200
+    else
+      render json: { error: "Cannot update your data." }, status: 401
+    end
+  end
+
   private
 
   def user_params
     params.require(:user).permit(:email_address, :password, :password_confirmation, :name)
+  end
+
+  def user_update_params 
+    params.require(:user).permit(:email_address, :name)
   end
 end

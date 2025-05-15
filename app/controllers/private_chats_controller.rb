@@ -7,19 +7,11 @@ class PrivateChatsController < ApplicationController
         end
 
         chatters = User.find(Current.session[:user_id]).messages.reduce([]) do |accumulator, message|
-            unless accumulator.include?(User.find(message.sender_id))
-                accumulator << User.find(message.sender_id)
+            unless accumulator.include?(User.find(message.sender_id).as_json(include: :user_info))
+                accumulator << User.includes(:user_info).find(message.sender_id).as_json(include: :user_info)
             end
             accumulator
         end
-        
-        # chats = User.find(Current.session[:user_id]).messages.reduce(Hash.new()) do |accumulator, message|
-        #     if accumulator[message.sender_id]
-        #         accumulator[message.sender_id] << message
-        #     else
-        #         accumulator[message.sender_id] = [message]
-        #     end
-        # end
 
         render json: { users: chatters }, status: 200
     end

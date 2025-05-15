@@ -10,17 +10,16 @@ class UserInfosController < ApplicationController
 
         if (user.user_info.update(user_info_params))
             session = user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip)
-            p session
-            render json: { success: "Your avatar was successfully changed.", user: user, user_info: user.user_info, token: session.token }, status: 200
+            render json: { success: "Your info was successfully changed.", user: user, user_info: user.user_info, token: session.token }, status: 200
         else
-            render json: { error: "Something went wrong while changing your avatar."}
+            render json: { error: "Something went wrong while changing your info."}
         end
     end
 
     private
 
     def user_info_params
-        params.require(:user_info).permit(:avatar_icon)
+        params.require(:user_info).permit(:avatar_icon, :bio)
     end
 
     def reject_anonymous_user
