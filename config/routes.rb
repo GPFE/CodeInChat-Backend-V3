@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     resource :user_info
   end
 
+  resources :groups
   resource :session
   resources :passwords, param: :token
   resources :messages
