@@ -47,5 +47,3 @@ group :development, :test do
 end
 
 gem "rack-cors", "~> 2.0"
-
-gem "active_model_serializers", "~> 0.10.15"

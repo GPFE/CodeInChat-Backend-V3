@@ -9,9 +9,9 @@ class SessionsController < ApplicationController
       render json: { error: 'Invalid credentials' }, status: :unauthorized
     end
   end
-  # Optional: Implement destroy action for logging out
+
   def destroy
     Current.session.destroy
-    head :no_content
+    render json: { success: "You were successfully logged out." }, status: 204
   end
 end

@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   end
 
   resources :groups
+  match "/groups/join", to: "groups#join", via: [:post]
   resource :session
+  match "logout", to: "sessions#destroy", via: [:post]
   resources :passwords, param: :token
   resources :messages
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

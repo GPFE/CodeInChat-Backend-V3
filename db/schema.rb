@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_15_173313) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_16_171127) do
   create_table "chats", force: :cascade do |t|
     t.integer "user_id"
     t.datetime "created_at", null: false
@@ -20,7 +20,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_15_173313) do
   create_table "groups", force: :cascade do |t|
     t.string "name"
     t.integer "owner_id"
-    t.integer "member_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -58,6 +57,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_15_173313) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.integer "group_id"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
