@@ -18,15 +18,12 @@ class GroupsController < ApplicationController
             render json: { error: "You can't join your own group." }, status: 400
             return
         end
-
-        if group.members.includes(user)
-            render json: { errror: "You've already joined this group." }, status: 400 
-            return
-        end
-
-        group.members << user
     
-        render json: { success: "You've successfully joined this group." }, status: 200
+        if GroupSubscription.create!(user_id: user.id, group_id: group.id)
+            render json: { success: "You've successfully joined this group." }, status: 200
+        else
+            render json: { error: "You've already joined this group."}, status: 400
+        end
     end
 
     def create

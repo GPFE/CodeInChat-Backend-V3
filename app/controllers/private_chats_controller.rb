@@ -6,7 +6,9 @@ class PrivateChatsController < ApplicationController
             reject_invalid_user
         end
 
-        chatters = User.find(Current.session[:user_id]).messages.reduce([]) do |accumulator, message|
+        user = User.find(Current.session[:user_id])
+
+        chatters = user.messages.reduce([]) do |accumulator, message|
             unless accumulator.include?(User.find(message.sender_id).as_json(include: :user_info))
                 accumulator << User.includes(:user_info).find(message.sender_id).as_json(include: :user_info)
             end
@@ -17,9 +19,17 @@ class PrivateChatsController < ApplicationController
     end
 
     def show
-        received_messages = User.find(params[:recipient_id])
+        user = User.find(Current.session[:user_id])
+        recipient = User.find(params[:recipient_id])
+
+        unless user.sent_messages || recipient.sent_messages
+            render json: { success: "No messages yet.", users: [] }, status: 200
+            return
+        end
+
+        received_messages = recipient
             .sent_messages.where(receivable_type: "User", receivable_id: Current.session[:user_id]).to_a
-        sent_messages = User.find(Current.session[:user_id])
+        sent_messages = user
             .sent_messages.where(receivable_type: "User", receivable_id: params[:recipient_id]).to_a
 
         messages = received_messages.concat(sent_messages)

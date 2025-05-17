@@ -11,7 +11,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    Current.session.destroy
+    user = User.find(Current.session[:user_id])
+    user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip)
     render json: { success: "You were successfully logged out." }, status: 204
   end
 end
