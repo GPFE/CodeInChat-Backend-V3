@@ -6,6 +6,17 @@ class MessagesController < ApplicationController
 
         unless message.sender || message.receivable || message.content
             reject_invalid_message
+            return
+        end
+
+        if message_params[:receivable_type] == "Group"
+            user = User.find(Current.session[:user_id])
+            group = Group.includes(:members).find(message_params[:receivable_id])
+
+            unless group.members.select() { |member| member.id == user.id } || group.owner_id == user.id
+                reject_invalid_user
+                return
+            end
         end
 
         if message.save
@@ -23,5 +34,9 @@ class MessagesController < ApplicationController
 
     def reject_invalid_message
         render json: { error: "Invalid message." }, status: 401
+    end
+
+    def reject_invalid_user
+        render json: { error: "Invalid user." }, status: 401
     end
 end

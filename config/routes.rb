@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   resources :groups
   match "/groups/join", to: "groups#join", via: [:post]
+  get "/joined_groups", to: "groups#joined_groups"
+  get "/groups/:id/messages", to: "groups#messages"
   resource :session
   match "logout", to: "sessions#destroy", via: [:post]
   resources :passwords, param: :token
