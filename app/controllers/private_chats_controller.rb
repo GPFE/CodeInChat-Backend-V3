@@ -15,7 +15,11 @@ class PrivateChatsController < ApplicationController
             accumulator
         end
 
-        render json: { users: chatters }, status: 200
+        receiver_ids = user.sent_messages.map() { |message|  message.receivable_id }.uniq
+        receivers = receiver_ids.map() { |receiver_id| User.includes(:user_info).find(receiver_id).as_json(include: :user_info) }
+
+
+        render json: { users: [chatters + receivers].flatten().uniq }, status: 200
     end
 
     def show

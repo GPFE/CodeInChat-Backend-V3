@@ -2,7 +2,9 @@ class GroupsController < ApplicationController
     skip_after_action :refresh_session
 
     def index
-        render json: { groups: Group.includes(:owner).all.as_json(include: :owner) }
+        groups = Group.includes(:owner).all.as_json(include: :owner)
+        p groups
+        render json: { groups: groups }
     end
 
     def join
