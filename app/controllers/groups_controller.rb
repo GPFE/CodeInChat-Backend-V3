@@ -17,7 +17,8 @@ class GroupsController < ApplicationController
     end
 
     def show
-        group = Group.includes(:messages).find(params[:id]).as_json(include: { :messages => { :include => :sender } })
+        group = Group.includes(:messages).find(params[:id])
+                    .as_json(include: { :messages => { :include => [:sender, stepper_cards: { include: :steps }] } })
 
         render json: { group: group }
     end
@@ -42,7 +43,7 @@ class GroupsController < ApplicationController
             return
         end
 
-        render json: { messages: group.messages }
+        render json: { messages: group.messages.as_json(include: { stepper_cards: { include: :steps } }) }
     end
 
     def joined_groups
