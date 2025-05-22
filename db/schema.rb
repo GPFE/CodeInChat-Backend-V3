@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_18_121101) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_20_052730) do
   create_table "chats", force: :cascade do |t|
     t.integer "user_id"
     t.datetime "created_at", null: false
@@ -49,6 +49,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_121101) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "stepper_cards", force: :cascade do |t|
+    t.integer "message_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "steps", force: :cascade do |t|
+    t.integer "stepper_card_id"
+    t.integer "index"
+    t.string "language"
+    t.string "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "description"
+    t.string "title"
   end
 
   create_table "user_infos", force: :cascade do |t|

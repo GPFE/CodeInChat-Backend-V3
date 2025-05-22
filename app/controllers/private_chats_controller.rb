@@ -32,12 +32,16 @@ class PrivateChatsController < ApplicationController
         end
 
         received_messages = recipient
-            .sent_messages.where(receivable_type: "User", receivable_id: Current.session[:user_id]).to_a
+            .sent_messages.includes(:stepper_cards)
+            .where(receivable_type: "User", receivable_id: Current.session[:user_id])
+            .as_json(include: {:stepper_cards => {include: :steps}}).to_a
         sent_messages = user
-            .sent_messages.where(receivable_type: "User", receivable_id: params[:recipient_id]).to_a
+            .sent_messages.includes(:stepper_cards)
+            .where(receivable_type: "User", receivable_id: params[:recipient_id])
+            .as_json(include: {:stepper_cards => {include: :steps}}).to_a
 
         messages = received_messages.concat(sent_messages)
-        sorted_messages = messages.sort_by &:created_at
+        sorted_messages = messages.sort_by() { |message| message[:created_at] }
         
         render json: { messages: sorted_messages }, status: 200
     end
