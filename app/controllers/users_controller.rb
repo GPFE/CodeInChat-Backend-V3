@@ -18,7 +18,21 @@ class UsersController < ApplicationController
     if user.save!
       user.create_user_info(bio: "", avatar_icon: "default")
       session = user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip)
-      render json: { user: user.as_json, token: session.token, user_info: UserInfo.find_by(user_id: user.id) }, status: 201
+
+      cookies.encrypted[:session_token] = {
+        value: session.token,
+        httponly: true,
+        secure: false, # Rails.env.production? - to-do - change me
+        expires: 2.weeks.from_now
+      }
+
+        cookies[:test_cookie] = {
+          value: "hello123",
+          httponly: true
+        }
+
+
+      render json: { user: user.as_json, user_info: UserInfo.find_by(user_id: user.id) }, status: 201
     else
       render json: { error: "Cannot create the user." }, status: 400
     end
