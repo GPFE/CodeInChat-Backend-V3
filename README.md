@@ -1,24 +1,25 @@
-# README
+### **CodeInChat Backend README – Ruby on Rails API**
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# CodeInChat — Backend API
 
-Things you may want to cover:
+API backend for **CodeInChat**, supporting user authentication, group chat, and interactive programming task cards.
 
-* Ruby version
+## 🛠️ Tech Stack
 
-* System dependencies
+- 🧱 Ruby on Rails API mode
+- 🍪 Cookie-based Authentication (Switched from JWTs for security)
+- 🔐 session management
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## 📦 Setup
+- **frontend:** https://github.com/GPFE/CodeInChat-Frontend
+```bash
+git clone https://github.com/GPFE/CodeInChat-Backend-V3.git
+cd CodeInChat-Backend-V3
+bundle install
+rails db:create db:migrate
+rails s
+```
+## 📌 TODO
+- Add background jobs (e.g. chat notifications)
+- Rate limiting & throttling
+- Admin panel (RailsAdmin or ActiveAdmin)
