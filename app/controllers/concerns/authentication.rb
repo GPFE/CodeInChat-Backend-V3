@@ -26,8 +26,8 @@ module Authentication
     if Current.session
       Current.session.regenerate_token!
 
-      cookes.encrypted[:session_token] = {
-        value: session.token,
+      cookies.encrypted[:session_token] = {
+        value: Current.session.token,
         httponly: true,
         secure: Rails.env.production?, # to-do improve this
         expires: 2.weeks.from_now

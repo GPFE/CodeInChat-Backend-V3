@@ -22,15 +22,9 @@ class UsersController < ApplicationController
       cookies.encrypted[:session_token] = {
         value: session.token,
         httponly: true,
-        secure: false, # Rails.env.production? - to-do - change me
+        secure: Rails.env.production?,
         expires: 2.weeks.from_now
       }
-
-        cookies[:test_cookie] = {
-          value: "hello123",
-          httponly: true
-        }
-
 
       render json: { user: user.as_json, user_info: UserInfo.find_by(user_id: user.id) }, status: 201
     else

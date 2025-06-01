@@ -6,7 +6,11 @@ class PrivateChatsController < ApplicationController
             reject_invalid_user
         end
 
+
         user = User.find(Current.session[:user_id])
+
+        p "session in privaaaaaateeeeeeee chats"
+        p user
 
         chatters = user.messages.reduce([]) do |accumulator, message|
             unless accumulator.include?(User.find(message.sender_id).as_json(include: :user_info))

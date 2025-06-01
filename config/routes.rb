@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
+  resources :private_chats, param: :recipient_id
+  
   resources :users, shallow: true do
-    resources :private_chats, param: :recipient_id
     resource :user_info
   end
 
