@@ -37,11 +37,11 @@ class PrivateChatsController < ApplicationController
 
         received_messages = recipient
             .sent_messages.includes(:stepper_cards)
-            .where(receivable_type: "User", receivable_id: Current.session[:user_id])
+            .by_receiver_id(Current.session[:user_id])
             .as_json(include: {:stepper_cards => {include: :steps}}).to_a
         sent_messages = user
             .sent_messages.includes(:stepper_cards)
-            .where(receivable_type: "User", receivable_id: params[:recipient_id])
+            .by_receiver_id(params[:recipient_id])
             .as_json(include: {:stepper_cards => {include: :steps}}).to_a
 
         messages = received_messages.concat(sent_messages)
