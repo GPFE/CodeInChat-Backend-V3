@@ -3,18 +3,13 @@ class GroupsController < ApplicationController
 
     def index
         user = User.find(Current.session[:user_id])
+        groups = Group.includes(:owner, :members).all
 
-        groups = Group.includes(:owner, :members).all.as_json(include: [:owner, :members])
-        new_groups = groups.map() do |group|
-            if group&.dig("members")&.select() { |member| member["id"] == user.id }&.length > 0
-                group.merge({ joined: true })
-            else
-                group.merge({ joined: false })
-            end
-        end
+        groups_with_joined = groups.map { |group| group.as_json_with_joined(user) }
 
-        render json: { groups: new_groups }
+        render json: { groups: groups_with_joined }
     end
+
 
     def show
         group = Group.includes(:messages).find(params[:id])
@@ -49,6 +44,7 @@ class GroupsController < ApplicationController
     def joined_groups
         user = User.find(Current.session[:user_id])
 
+        p user
         render json: { groups: user.groups + user.owned_groups }, status: 200
     end
 

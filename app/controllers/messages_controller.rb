@@ -13,7 +13,7 @@ class MessagesController < ApplicationController
             user = User.find(Current.session[:user_id])
             group = Group.includes(:members).find(message_params[:receivable_id])
 
-            unless group.members.select() { |member| member.id == user.id } || group.owner_id == user.id
+            unless group.has_user?(user)
                 reject_invalid_user
                 return
             end
