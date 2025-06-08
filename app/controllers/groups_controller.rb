@@ -33,7 +33,7 @@ class GroupsController < ApplicationController
         group = Group.includes(:messages).find(params[:id])
         user = User.find(Current.session[:user_id])
 
-        unless Group.includes(:members).find(message_params[:receivable_id]).members.select() { |member| member.id == user.id } || Group.find(message_params[:receivable_id]).owner_id == user.id
+        unless group.has_user?(user)
             reject_invalid_user
             return
         end
@@ -80,6 +80,6 @@ class GroupsController < ApplicationController
     end
 
     def reject_invalid_user
-        render json: { error: "Invalid user." }, status: 401
+        render json: { error: "Invalid user." }, status: 422
     end
 end

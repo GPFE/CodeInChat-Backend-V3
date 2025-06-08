@@ -9,18 +9,11 @@ class PrivateChatsController < ApplicationController
 
         user = User.find(Current.session[:user_id])
 
-        p "session in privaaaaaateeeeeeee chats"
-        p user
+        chatters = user.users_who_messaged_me.as_json(include: :user_info)
 
-        chatters = user.messages.reduce([]) do |accumulator, message|
-            unless accumulator.include?(User.find(message.sender_id).as_json(include: :user_info))
-                accumulator << User.includes(:user_info).find(message.sender_id).as_json(include: :user_info)
-            end
-            accumulator
-        end
-
-        receiver_ids = user.sent_messages.map() { |message|  message.receivable_id }.uniq
-        receivers = receiver_ids.map() { |receiver_id| User.includes(:user_info).find(receiver_id).as_json(include: :user_info) }
+        receivers = user
+                    .users_who_I_messaged
+                    .as_json(include: :user_info)
 
 
         render json: { users: [chatters + receivers].flatten().uniq }, status: 200
