@@ -46,4 +46,4 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 end
 
-gem "rack-cors", "~> 2.0"
+gem "rack-cors", "~> 3.0"
